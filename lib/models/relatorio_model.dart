@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:apphealthsync/models/perfil_model.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
 
 class Relatorio {
   final String id;
@@ -17,60 +17,72 @@ class Relatorio {
     required this.conteudo,
   });
 
-  /// Gera um relatório textual
-  String gerarRelatorioTexto() {
-    StringBuffer buffer = StringBuffer();
-    buffer.writeln('Relatório de Saúde');
-    buffer.writeln('Nome: ${perfil.nome}');
-    buffer.writeln('Idade: ${perfil.idade}');
-    buffer.writeln('Histórico de Saúde:');
-
-    for (var dado in perfil.historicoSaude) {
-      buffer.writeln('- ${dado.tipo}: ${dado.valor} (${dado.data.toIso8601String()})');
-    }
-
-    return buffer.toString();
+  factory Relatorio.fromJson(Map<String, dynamic> json) {
+    return Relatorio(
+      id: json['id'] as String,
+      perfil: Perfil.fromJson(json['perfil'] as Map<String, dynamic>),
+      dataGeracao: DateTime.parse(json['dataGeracao'] as String),
+      conteudo: json['conteudo'] as String,
+    );
   }
 
-  /// Gera um relatório em PDF e salva no dispositivo
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'perfil': perfil.toJson(),
+      'dataGeracao': dataGeracao.toIso8601String(),
+      'conteudo': conteudo,
+    };
+  }
+
+  // Método para gerar o relatório em PDF
   Future<String> gerarRelatorioPDF() async {
     final pdf = pw.Document();
 
-    // Adiciona conteúdo ao PDF
+    // Adicionando conteúdo ao PDF
     pdf.addPage(
       pw.Page(
-        build: (pw.Context context) => pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text('Relatório de Saúde', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-            pw.SizedBox(height: 16),
-            pw.Text('Nome: ${perfil.nome}', style: pw.TextStyle(fontSize: 16)),
-            pw.Text('Idade: ${perfil.idade}', style: pw.TextStyle(fontSize: 16)),
-            pw.SizedBox(height: 16),
-            pw.Text('Histórico de Saúde:', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-            pw.SizedBox(height: 8),
-            pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: perfil.historicoSaude.map((dado) {
-                return pw.Text(
-                  '- ${dado.tipo}: ${dado.valor} (${dado.data.toIso8601String()})',
-                  style: pw.TextStyle(fontSize: 14),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('Relatório de Saúde', style: pw.TextStyle(fontSize: 24)),
+              pw.Text('Nome: ${perfil.nome}', style: pw.TextStyle(fontSize: 18)),
+              pw.Text('Idade: ${perfil.idade}', style: pw.TextStyle(fontSize: 18)),
+              pw.Text('Data de Geração: ${dataGeracao.toIso8601String()}', style: pw.TextStyle(fontSize: 18)),
+              pw.SizedBox(height: 16),
+              pw.Text('Conteúdo:', style: pw.TextStyle(fontSize: 18)),
+              pw.Text(conteudo, style: pw.TextStyle(fontSize: 14)),
+            ],
+          );
+        },
       ),
     );
 
-    // Salva o PDF no armazenamento local
-    final directory = await getApplicationDocumentsDirectory();
-    final filePath = '${directory.path}/relatorio_saude_${perfil.id}.pdf';
+    // Salvando o PDF
+    final output = await getExternalStorageDirectory();
+    final filePath = '${output!.path}/relatorio_${id}.pdf';
     final file = File(filePath);
-
     await file.writeAsBytes(await pdf.save());
-    print('Relatório PDF salvo em: $filePath');
 
-    return filePath; // Retorna o caminho do arquivo
+    return filePath;
+  }
+
+  String gerarRelatorioTexto() {
+    StringBuffer buffer = StringBuffer();
+
+    // Cabeçalho
+    buffer.writeln('Relatório de Saúde');
+    buffer.writeln('ID do Relatório: $id');
+    buffer.writeln('Data de Geração: ${dataGeracao.toIso8601String()}');
+    buffer.writeln('--------------------------------------------------');
+
+    // Informações do perfil
+    buffer.writeln('Nome: ${perfil.nome}');
+    buffer.writeln('Idade: ${perfil.idade}');
+    buffer.writeln('--------------------------------------------------');
+    buffer.writeln(conteudo);
+
+    return buffer.toString();
   }
 }

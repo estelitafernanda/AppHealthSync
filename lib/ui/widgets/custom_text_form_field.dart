@@ -23,23 +23,23 @@ class CustomTextFormField extends StatelessWidget {
         validator: validateFunction,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+          labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
           border: OutlineInputBorder(
             borderSide:
-            BorderSide(color: Theme.of(context).colorScheme.secondary),
-            borderRadius: BorderRadius.circular(5),
+            BorderSide(color: Color(4289382399)),
+            borderRadius: BorderRadius.circular(20),
           ),
           enabledBorder: OutlineInputBorder(
             borderSide:
-            BorderSide(color: Theme.of(context).colorScheme.secondary),
-            borderRadius: BorderRadius.circular(5),
+            BorderSide(color: Color(4289382399)),
+            borderRadius: BorderRadius.circular(20),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide:
-            BorderSide(color: Theme.of(context).colorScheme.secondary),
-            borderRadius: BorderRadius.circular(5),
+            BorderSide(color: Color(4289382399)),
+            borderRadius: BorderRadius.circular(20),
           ),
-          fillColor: Theme.of(context).colorScheme.surface,
+          fillColor: Color(4289382399),
           filled: true,
         ),
       ),

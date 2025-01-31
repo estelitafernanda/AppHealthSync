@@ -1,9 +1,13 @@
+import 'package:apphealthsync/ui/pages/cadastromedicacaopage.dart';
+import 'package:apphealthsync/ui/pages/cadastrosaudepage.dart';
+import 'package:apphealthsync/ui/pages/criarrelatoriopage.dart';
 import 'package:apphealthsync/ui/widgets/authchecker.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'core/di/configure_providers.dart';
 import 'firebase_options.dart';
+import 'core/di/medicacaoprovider.dart'; // Importe o MedicacaoProvider
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +50,10 @@ class MyApp extends StatelessWidget {
         final data = snapshot.data!;
 
         return MultiProvider(
-          providers: data.provider,
+          providers: [
+            ...data.providers,  // Provedores existentes
+            ChangeNotifierProvider(create: (_) => MedicacaoProvider()), // Adiciona o MedicacaoProvider
+          ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'HealthSync',
@@ -54,7 +61,14 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
             ),
-            home: const AuthChecker(),
+            // Configuração das rotas
+            routes: {
+              '/': (context) => const AuthChecker(), // Página inicial
+              '/cadastraomedicacaopage': (context) => CadastroMedicacaoPage(), // Página de cadastro de medicação
+              // Adicione outras rotas conforme necessário
+              '/cadastrosintomaspage' : (context) => CadastroSaudePage(),
+              '/cadastrorelatorio' : (context) => CriarRelatorioPage(),
+            },
           ),
         );
       },

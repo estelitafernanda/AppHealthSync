@@ -37,7 +37,7 @@ class _CustomPassordFormFieldState extends State<CustomPasswordFormField> {
         validator: widget.validateFunction,
         obscureText: obscured,
         decoration: InputDecoration(
-            suffixIconColor:  Theme.of(context).colorScheme.primary,
+            suffixIconColor: Color(4282474129),
             suffixIcon: GestureDetector(
               onTap: () => {
                 setState(() {
@@ -49,20 +49,20 @@ class _CustomPassordFormFieldState extends State<CustomPasswordFormField> {
                   : Icon(Icons.remove_red_eye_outlined),
             ),
             labelText: widget.labelText,
-            labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
+            labelStyle: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer),
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
-              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Color(4289382399)),
+              borderRadius: BorderRadius.circular(20),
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
-              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Color(4289382399)),
+              borderRadius: BorderRadius.circular(20),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
-              borderRadius: BorderRadius.circular(5),
+              borderSide: BorderSide(color: Color(4289382399)),
+              borderRadius: BorderRadius.circular(20),
             ),
-            fillColor: Theme.of(context).colorScheme.surface,
+            fillColor: Color(4289382398),
             filled: true
         ),
       ),

@@ -7,7 +7,10 @@ class CustomButton extends StatelessWidget {
   final void Function()? onClick;
 
   const CustomButton({
-    super.key, required this.height, required this.text, this.onClick,
+    super.key,
+    required this.height,
+    required this.text,
+    this.onClick,
   });
 
   @override
@@ -16,12 +19,12 @@ class CustomButton extends StatelessWidget {
       width: double.infinity,
       height: height,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(left: 50, right: 50),
         child: FilledButton(
           style: ButtonStyle(
             shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
+                borderRadius: BorderRadius.circular(35.0),
               ),
             ),
           ),
